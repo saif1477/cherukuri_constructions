@@ -1,0 +1,17 @@
+{
+  "name": "Cherukuri Constructions",
+  "short_name": "Cherukuri",
+  "description": "Construction Agreement & CRM Application",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0a0a",
+  "theme_color": "#1e3a5f",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
