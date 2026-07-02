@@ -44,13 +44,24 @@ export default function FormScreen({ contract, onBack, onSaved }) {
   });
 
   const handleMaterialChange = (id, field, value) => {
-    setMaterials((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, [field]: value } : m))
-    );
+    setMaterials((prev) => {
+      const newMaterials = prev.map((m) => (m.id === id ? { ...m, [field]: value } : m));
+      if (field === 'cost') {
+        const totalCost = newMaterials.reduce((acc, m) => acc + (parseFloat(m.cost) || 0), 0);
+        setBillAmount(totalCost ? totalCost.toString() : '');
+      }
+      return newMaterials;
+    });
   };
 
   const handleDeleteMaterial = (id) => {
-    setMaterials((prev) => (prev.length <= 1 ? prev : prev.filter((m) => m.id !== id)));
+    setMaterials((prev) => {
+      if (prev.length <= 1) return prev;
+      const newMaterials = prev.filter((m) => m.id !== id);
+      const totalCost = newMaterials.reduce((acc, m) => acc + (parseFloat(m.cost) || 0), 0);
+      setBillAmount(totalCost ? totalCost.toString() : '');
+      return newMaterials;
+    });
   };
 
   const addMaterial = () => {
