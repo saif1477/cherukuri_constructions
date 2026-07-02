@@ -10,10 +10,9 @@ export default function FormScreen({ contract, onBack, onSaved }) {
   const { lang, t, toggleLang, isTeluguActive } = useLang();
 
   /* ── state ────────────────────────────────────────────── */
-  const [clientName, setClientName] = useState('');
-  const [clientPhone, setClientPhone] = useState('');
+  const [description, setDescription] = useState('');
   const [materials, setMaterials] = useState([
-    { id: crypto.randomUUID(), material: '', specifications: '' },
+    { id: crypto.randomUUID(), material: '', specifications: '', cost: '' },
   ]);
   const [billAmount, setBillAmount] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -22,8 +21,7 @@ export default function FormScreen({ contract, onBack, onSaved }) {
   /* ── populate from existing contract ──────────────────── */
   useEffect(() => {
     if (!contract) return;
-    setClientName(contract.clientName || '');
-    setClientPhone(contract.clientPhone || '');
+    setDescription(contract.description || '');
     setBillAmount(contract.billAmount || '');
     if (contract.materials?.length) {
       setMaterials(
@@ -31,6 +29,7 @@ export default function FormScreen({ contract, onBack, onSaved }) {
           id: m.id || crypto.randomUUID(),
           material: m.material || '',
           specifications: m.specifications || '',
+          cost: m.cost || '',
         }))
       );
     }
@@ -39,8 +38,7 @@ export default function FormScreen({ contract, onBack, onSaved }) {
   /* ── helpers ──────────────────────────────────────────── */
   const buildContractData = () => ({
     id: contractId,
-    clientName,
-    clientPhone,
+    description,
     materials,
     billAmount,
   });
@@ -58,7 +56,7 @@ export default function FormScreen({ contract, onBack, onSaved }) {
   const addMaterial = () => {
     setMaterials((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), material: '', specifications: '' },
+      { id: crypto.randomUUID(), material: '', specifications: '', cost: '' },
     ]);
   };
 
@@ -80,7 +78,7 @@ export default function FormScreen({ contract, onBack, onSaved }) {
       const contractData = { ...buildContractData(), status: 'complete' };
       await saveContract(contractData);
       const blob = await generatePdf(contractData, lang);
-      const filename = `${clientName || 'Contract'}_Agreement.pdf`;
+      const filename = `Contract_Agreement.pdf`;
       await shareOrDownloadPdf(blob, filename);
     } catch (err) {
       console.error('PDF generation failed:', err);
@@ -145,29 +143,19 @@ export default function FormScreen({ contract, onBack, onSaved }) {
       </nav>
 
       {/* ─── Static header ─────────────────────────────── */}
-      <div className="p-5 text-center">
-        <h1 className="text-lg font-bold tracking-widest text-gray-800 dark:text-gray-100">
-          CHERUKURI CONSTRUCTIONS
-        </h1>
-        <p className="text-sm text-gray-500 mt-0.5">{t('phone')}</p>
+      <div className="p-5 flex items-center justify-center gap-3">
+        <img src="/logo.png" alt="Logo" className="w-12 h-12 object-contain" onError={(e) => e.target.style.display = 'none'} />
+        <div className="text-center">
+          <h1 className="text-lg font-bold tracking-widest text-gray-800 dark:text-gray-100">
+            CHERUKURI CONSTRUCTIONS
+          </h1>
+          <p className="text-sm text-gray-500 mt-0.5">{t('phone')}</p>
+        </div>
       </div>
 
       {/* ─── Client details ────────────────────────────── */}
       <div className="px-5 space-y-3">
-        <input
-          type="text"
-          value={clientName}
-          onChange={(e) => setClientName(e.target.value)}
-          placeholder={t('clientName')}
-          className={inputClasses}
-        />
-        <input
-          type="tel"
-          value={clientPhone}
-          onChange={(e) => setClientPhone(e.target.value)}
-          placeholder={t('clientPhone')}
-          className={inputClasses}
-        />
+        {/* Removed Client Details */}
       </div>
 
       {/* ─── Materials section ─────────────────────────── */}
@@ -198,6 +186,20 @@ export default function FormScreen({ contract, onBack, onSaved }) {
           <span className="text-lg leading-none">+</span>
           {t('addItem')}
         </button>
+
+        {/* ─── Contract Details Description ──────────────── */}
+        <div className="mt-6">
+          <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wide mb-2">
+            {t('description')}
+          </label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder={t('description')}
+            rows="4"
+            className={`${inputClasses} resize-y min-h-[100px]`}
+          />
+        </div>
       </div>
 
       {/* ─── Financials section ────────────────────────── */}

@@ -31,14 +31,23 @@ export default function MaterialCard({ index, data, onChange, onDelete }) {
         className="w-full bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border-none outline-none focus:ring-2 focus:ring-blue-500/30 transition-all duration-200 mb-2"
       />
 
-      {/* Specifications input */}
-      <input
-        type="text"
-        value={data.specifications || ''}
-        onChange={(e) => onChange(data.id, 'specifications', e.target.value)}
-        placeholder={t('specifications')}
-        className="w-full bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border-none outline-none focus:ring-2 focus:ring-blue-500/30 transition-all duration-200"
-      />
+      {/* Specifications and Cost input */}
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={data.specifications || ''}
+          onChange={(e) => onChange(data.id, 'specifications', e.target.value)}
+          placeholder={t('specifications')}
+          className="flex-1 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border-none outline-none focus:ring-2 focus:ring-blue-500/30 transition-all duration-200"
+        />
+        <input
+          type="text"
+          value={data.cost || ''}
+          onChange={(e) => onChange(data.id, 'cost', e.target.value)}
+          placeholder={t('cost')}
+          className="w-1/3 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border-none outline-none focus:ring-2 focus:ring-blue-500/30 transition-all duration-200"
+        />
+      </div>
     </div>
   );
 }

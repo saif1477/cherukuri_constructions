@@ -8,7 +8,7 @@ const statusStyles = {
 };
 
 function ContractCard({ contract, index, onEdit, onDelete, t }) {
-  const { id, clientName, clientPhone, billAmount, status } = contract;
+  const { id, description, billAmount, status, materials } = contract;
 
   const handleDelete = (e) => {
     e.stopPropagation();
@@ -49,10 +49,10 @@ function ContractCard({ contract, index, onEdit, onDelete, t }) {
       <div className="flex items-start justify-between pr-8">
         <div className="min-w-0 flex-1">
           <p className="font-semibold text-gray-900 dark:text-gray-100 truncate">
-            {clientName || t('clientName')}
+            {t('agreementTitle')} - {id.slice(0, 4)}
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5">
-            {clientPhone || 'No phone'}
+            {materials?.length || 0} {t('materialsTitle')}
           </p>
         </div>
       </div>

@@ -14,6 +14,8 @@ export function buildPdfHtml(contract, lang = 'en') {
     sno: isTE ? 'క్ర.సం' : 'S.No',
     material: isTE ? 'మెటీరియల్' : 'Material',
     specs: isTE ? 'వివరాలు' : 'Specifications',
+    cost: isTE ? 'ఖర్చు' : 'Cost',
+    description: isTE ? 'ఒప్పంద వివరాలు' : 'Contract Details',
     materials: isTE ? 'మెటీరియల్స్ & వివరాలు' : 'Materials & Specifications',
     total: isTE ? 'మొత్తం కాంట్రాక్ట్ మొత్తం' : 'Total Contract Amount',
     builder: isTE ? 'బిల్డర్' : 'Builder',
@@ -44,6 +46,7 @@ export function buildPdfHtml(contract, lang = 'en') {
         <td style="border:1px solid #d1d5db;padding:10px 12px;text-align:center;font-size:13px;color:#374151;">${i + 1}</td>
         <td style="border:1px solid #d1d5db;padding:10px 12px;font-size:13px;color:#111827;">${m.material || ''}</td>
         <td style="border:1px solid #d1d5db;padding:10px 12px;font-size:13px;color:#111827;">${m.specifications || ''}</td>
+        <td style="border:1px solid #d1d5db;padding:10px 12px;font-size:13px;color:#111827;">${m.cost || ''}</td>
       </tr>
     `
     )
@@ -55,7 +58,7 @@ export function buildPdfHtml(contract, lang = 'en') {
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
     <div style="width:80px;">
       <!-- Placeholders for logos -->
-      <img src="/logo-left.png" alt="Logo Left" style="max-width:100%;max-height:80px;object-fit:contain;" onerror="this.style.display='none'" />
+      <img src="/logo.png" alt="Logo Left" style="max-width:100%;max-height:80px;object-fit:contain;" onerror="this.style.display='none'" />
     </div>
     <div style="flex:1;text-align:center;">
       <h1 style="font-size:26px;font-weight:700;color:#1e3a5f;letter-spacing:1px;margin:0;">CHERUKURI CONSTRUCTIONS</h1>
@@ -69,20 +72,16 @@ export function buildPdfHtml(contract, lang = 'en') {
   <div style="text-align:right;margin-bottom:30px;font-size:14px;font-weight:500;color:#374151;">
     <div style="display:inline-block;text-align:left;">
       <div style="margin-bottom:8px;"><strong>Date:</strong> </div>
+      <div style="margin-bottom:8px;"><strong>Builder Name:</strong> SHAIK KHAJAVALI</div>
       <div><strong>Phone:</strong> +91 9848467428</div>
     </div>
   </div>
 
-  <div style="display:flex;justify-content:space-between;margin-bottom:20px;gap:20px;">
-    <div style="flex:1;">
-      <div style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">${labels.client}</div>
-      <div style="font-size:14px;font-weight:500;color:#111827;border-bottom:1px solid #e5e7eb;padding-bottom:4px;min-height:22px;">${contract.clientName || ''}</div>
-    </div>
-    <div style="flex:1;">
-      <div style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">${labels.clientPhone}</div>
-      <div style="font-size:14px;font-weight:500;color:#111827;border-bottom:1px solid #e5e7eb;padding-bottom:4px;min-height:22px;">${contract.clientPhone || ''}</div>
-    </div>
-  </div>
+  ${contract.description ? `
+  <div style="margin-bottom:20px;">
+    <div style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">${labels.description}</div>
+    <div style="font-size:14px;color:#111827;background:#f9fafb;padding:12px;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;">${contract.description}</div>
+  </div>` : ''}
 
 
   <div style="font-size:14px;font-weight:600;color:#1e3a5f;margin:24px 0 10px 0;text-transform:uppercase;letter-spacing:0.5px;">${labels.materials}</div>
@@ -92,10 +91,11 @@ export function buildPdfHtml(contract, lang = 'en') {
         <th style="background:#1e3a5f;color:#fff;font-size:12px;font-weight:600;padding:10px 12px;text-align:center;text-transform:uppercase;letter-spacing:0.5px;border:1px solid #1e3a5f;width:60px;">${labels.sno}</th>
         <th style="background:#1e3a5f;color:#fff;font-size:12px;font-weight:600;padding:10px 12px;text-align:left;text-transform:uppercase;letter-spacing:0.5px;border:1px solid #1e3a5f;">${labels.material}</th>
         <th style="background:#1e3a5f;color:#fff;font-size:12px;font-weight:600;padding:10px 12px;text-align:left;text-transform:uppercase;letter-spacing:0.5px;border:1px solid #1e3a5f;">${labels.specs}</th>
+        <th style="background:#1e3a5f;color:#fff;font-size:12px;font-weight:600;padding:10px 12px;text-align:left;text-transform:uppercase;letter-spacing:0.5px;border:1px solid #1e3a5f;">${labels.cost}</th>
       </tr>
     </thead>
     <tbody>
-      ${materialsRows || '<tr><td colspan="3" style="border:1px solid #d1d5db;padding:12px;text-align:center;color:#9ca3af;">—</td></tr>'}
+      ${materialsRows || '<tr><td colspan="4" style="border:1px solid #d1d5db;padding:12px;text-align:center;color:#9ca3af;">—</td></tr>'}
     </tbody>
   </table>
 
@@ -151,7 +151,7 @@ export async function generatePdf(contract, lang = 'en') {
 
   const opt = {
     margin: 0,
-    filename: `${contract.clientName || 'Contract'}_Agreement.pdf`,
+    filename: `Contract_Agreement.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: {
       scale: 2,
